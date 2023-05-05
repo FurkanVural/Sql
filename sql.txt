@@ -1,0 +1,186 @@
+/Joins/
+
+/*JOIN QUESTION 1.
+Print which Operator Employee works with which blood bank.*/
+SELECT Blood_Bank.bbName, 
+OPERATOR.oFname, 
+OPERATOR.oLname
+FROM ( Blood_Bank 
+INNER JOIN OPERATOR
+ON Blood_Bank.oEid = OPERATOR.oeid);
+
+/*JOIN QUESTION 2.
+Print the name of the people who received blood between 1-1-2020 and 1-10-2020 and the bag Number of the blood they received, day by day.*/
+SELECT Blood.bBagNum, Receipent.rFname, Receipent.rLname
+FROM ((Blood 
+INNER JOIN Gets
+ON Blood.DateOfAcception = Gets.DateOfAcception)
+INNER JOIN Receipent
+ON Receipent.rid = gets.rid)
+Where DateOfAcception<'1-1-2020' AND DateOfAcception>'1-10-2020'
+GROUP BY Blood.bBagNum, Receipent.rFname, Receipent.rLname;
+
+
+/Nested queries/
+
+/*NESTED QUERIES QUESTION 1.
+Print the names of the blood bank manager who arranges blood for people over 30.*/
+SELECT blood_bank_manager.bbmfname, blood_bank_manager.bbmlname 
+FROM BLOOD_BANK_MANAGER 
+INNER JOIN RECEIPENT 
+ON blood_bank_manager.rid = receipent.rid
+WHERE rAge in
+(SELECT rAge FROM RECEIPENT WHERE rAge > 30);
+
+
+/*NESTED QUERIES QUESTION 2.
+Print the blood bank id that supplied blood to a person with a rid bigger than 20 .*/
+SELECT blood_bank_manager.bbmfname, blood_bank_manager.bbmlname
+FROM blood_bank_manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid
+WHERE rid IN
+(SELECT rid FROM Receipent
+WHERE rid = '149873');
+
+
+/Set Operations/
+
+/*SET OPERATIONS QUESTION 1.
+Print the names of the nurses who took blood from anyone in January and December of 2021.*/
+SELECT oFname , oLname
+FROM ((Operator 
+INNER JOIN DONOR ON Operator.did = Donor.did)
+INNER JOIN DONATE ON Donor.did = Donate.did)
+WHERE DateOfDonation BETWEEN '1-JAN-2021' AND '31-JAN-2020'
+INTERSECT
+SELECT oFname , oLname
+FROM ((Operator 
+INNER JOIN DONOR ON Operator.did = Donor.did)
+INNER JOIN DONATE ON Donor.did = Donate.did)
+WHERE DateOfDonation BETWEEN '1-DEC-2021' AND '31-DEC-2020';
+
+
+
+/*SET OPERATIONS QUESTION 2.
+Print out the names of the Blood Bank Managers who find blood, except those aged 40 and 55.*/
+SELECT Blood_Bank_Manager.bbmFname, Blood_Bank_Manager.bbmLname
+FROM (Blood_Bank_Manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid)
+WHERE rAge in(SELECT rAge FROM receipent WHERE rAge > 10) 
+EXCEPT
+SELECT Blood_Bank_Manager.bbmFname, Blood_Bank_Manager.bbmLname
+FROM (Blood_Bank_Manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid)
+WHERE rAge in(SELECT rAge FROM receipent WHERE rAge < 50) ;
+
+
+/Aggregate/
+
+/*AGGREGATE QUESTION 1.
+Find the average age of blood donors who have A antigen in their blood group.*/
+SELECT AVG(dAge) From Donor
+NATURAL JOIN Blood
+where bType = 'AB Rh+';
+
+/*AGGREGATE QUESTION 2.
+Print out the number of people receiving blood at each hospital.*/
+SELECT Count(rid)
+FROM Receipent
+GROUP BY rHospital;
+
+
+/Joins/
+
+/*JOIN QUESTION 1.
+Print which Operator Employee works with which blood bank.*/
+SELECT Blood_Bank.bbName, 
+OPERATOR.oFname, 
+OPERATOR.oLname
+FROM ( Blood_Bank 
+INNER JOIN OPERATOR
+ON Blood_Bank.oEid = OPERATOR.oeid);
+
+/*JOIN QUESTION 2.
+Print the name of the people who received blood between 1-1-2020 and 1-10-2020 and the bag Number of the blood they received, day by day.*/
+SELECT Blood.bBagNum, Receipent.rFname, Receipent.rLname
+FROM ((Blood 
+INNER JOIN Gets
+ON Blood.DateOfAcception = Gets.DateOfAcception)
+INNER JOIN Receipent
+ON Receipent.rid = gets.rid)
+Where DateOfAcception<'1-1-2020' AND DateOfAcception>'1-10-2020'
+GROUP BY Blood.bBagNum, Receipent.rFname, Receipent.rLname;
+
+
+/Nested queries/
+
+/*NESTED QUERIES QUESTION 1.
+Print the names of the blood bank manager who arranges blood for people over 30.*/
+SELECT blood_bank_manager.bbmfname, blood_bank_manager.bbmlname 
+FROM BLOOD_BANK_MANAGER 
+INNER JOIN RECEIPENT 
+ON blood_bank_manager.rid = receipent.rid
+WHERE rAge in
+(SELECT rAge FROM RECEIPENT WHERE rAge > 30);
+
+
+/*NESTED QUERIES QUESTION 2.
+Print the blood bank id that supplied blood to a person with a rid is equal to 149873 .*/
+SELECT blood_bank_manager.bbmfname, blood_bank_manager.bbmlname
+FROM blood_bank_manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid
+WHERE rid IN
+(SELECT rid FROM Receipent
+WHERE rid = '149873');
+
+
+/Set Operations/
+
+/*SET OPERATIONS QUESTION 1.
+Print the names of the nurses who took blood from anyone in January and December of 2021.*/
+SELECT oFname , oLname
+FROM ((Operator 
+INNER JOIN DONOR ON Operator.did = Donor.did)
+INNER JOIN DONATE ON Donor.did = Donate.did)
+WHERE DateOfDonation BETWEEN '1-JAN-2021' AND '31-JAN-2020'
+INTERSECT
+SELECT oFname , oLname
+FROM ((Operator 
+INNER JOIN DONOR ON Operator.did = Donor.did)
+INNER JOIN DONATE ON Donor.did = Donate.did)
+WHERE DateOfDonation BETWEEN '1-DEC-2021' AND '31-DEC-2020';
+
+
+
+/*SET OPERATIONS QUESTION 2.
+Print out the names of the Blood Bank Managers who find blood, except those aged 40 and 55.*/
+SELECT Blood_Bank_Manager.bbmFname, Blood_Bank_Manager.bbmLname
+FROM (Blood_Bank_Manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid)
+WHERE rAge in(SELECT rAge FROM receipent WHERE rAge > 10) 
+EXCEPT
+SELECT Blood_Bank_Manager.bbmFname, Blood_Bank_Manager.bbmLname
+FROM (Blood_Bank_Manager
+INNER JOIN Receipent 
+ON Blood_Bank_Manager.rid = Receipent.rid)
+WHERE rAge in(SELECT rAge FROM receipent WHERE rAge < 50) ;
+
+
+/Aggregate/
+
+/*AGGREGATE QUESTION 1.
+Find the average age of blood donors who have A antigen in their blood group.*/
+SELECT AVG(dAge) From Donor
+NATURAL JOIN Blood
+where bType = 'AB Rh+';
+
+/*AGGREGATE QUESTION 2.
+Print out the number of people receiving blood at each hospital.*/
+SELECT Count(rid)
+FROM Receipent
+GROUP BY rHospital;
